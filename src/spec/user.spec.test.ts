@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from '../interface/http/user.controller';
 import { UserUseCase } from '../application/usecases/user.usecase';
-import { User } from '../core/entities/user.entity';
+import { UserEntity } from '../core/entities/user.entity';
 
 describe('UserController', () => {
     let userController: UserController;
@@ -30,16 +30,14 @@ describe('UserController', () => {
                 name: 'Test User',
                 email: 'test@example.com',
                 password: 'password123',
-                gender: 'male',
-                phone: 123456789,
+                role: 'client'
             };
 
-            const createdUser = new User(
+            const createdUser = new UserEntity(
                 'Test User',
                 'test@example.com',
                 'hashedpassword123',
-                'male',
-                123456789,
+                'client'
             );
 
             jest.spyOn(userUseCase, 'execute').mockResolvedValue(createdUser);
@@ -49,8 +47,6 @@ describe('UserController', () => {
                 userDto.name,
                 userDto.email,
                 userDto.password,
-                userDto.gender,
-                userDto.phone,
             );
 
 
