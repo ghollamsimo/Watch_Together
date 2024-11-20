@@ -1,13 +1,21 @@
-import {Body, Controller, Post} from "@nestjs/common";
-import {UserUseCase} from "../../application/usecases/user.usecase";
-import {User} from "../../core/entities/user.entity";
+import { Body, Controller, Post } from "@nestjs/common";
+import { UserUseCase } from "../../application/usecases/user.usecase";
+import { UserEntity } from "../../core/entities/user.entity";
+import { LoginDTO } from "src/core/dto/login.dto";
 
-@Controller('users')
+@Controller('auth')
 export class UserController {
-    constructor(private readonly UserUseCase: UserUseCase) {}
+    constructor(private readonly userUseCase: UserUseCase) { }
 
-    @Post()
-    async store(@Body() body: {name: string; email: string; password: string, gender: string, phone: number}): Promise<User>{
-        return await this.UserUseCase.execute(body.name, body.email, body.password, body.gender, body.phone)
+    @Post('register')
+    async store(
+        @Body() body: { name: string; email: string; password: string }
+    ): Promise<UserEntity> {
+        return this.userUseCase.execute(body.name, body.email, body.password);
+    }
+
+    @Post('login')
+    async login(@Body() body: LoginDTO): Promise<{ token: string }> {
+        return this.userUseCase.login(body.email);
     }
 }
