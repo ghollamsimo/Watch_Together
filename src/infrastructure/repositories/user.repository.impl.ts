@@ -7,14 +7,12 @@ import { User as UserDocument } from "../db/schemas/user.schema";
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
-import { MailerService } from '@nestjs-modules/mailer';
 import { LoginDTO } from '../../core/dto/login.dto'
 
 
 @Injectable()
 export class UserRepositoryImpl implements UserInterface {
-  constructor(@InjectModel(UserDocument.name) private userModel: Model<UserDocument>, private readonly jwtService: JwtService,
-    private readonly mailService: MailerService) { }
+  constructor(@InjectModel(UserDocument.name) private userModel: Model<UserDocument>, private readonly jwtService: JwtService) { }
     
   
   async login(loginDTO: LoginDTO): Promise<{ token: string; }> {
@@ -23,24 +21,12 @@ export class UserRepositoryImpl implements UserInterface {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const isPasswordValid = await bcrypt.compare(loginDTO.password, user.password);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
     const token = this.jwtService.sign({ id: user._id, name: user.name, email: user.email });
+    
     return { token };
   }
 
-  forgotPassword(email: string): Promise<{ email: string; }> {
-    throw new Error("Method not implemented.");
-  }
-  
-  resetPassword(resetToken: string, newPassword: string): Promise<{ message: string; }> {
-    throw new Error("Method not implemented.");
-  }
-
-  index(user: UserEntity): UserEntity {
+    index(user: UserEntity): UserEntity {
     const users = this.userModel.find();
     if (!users) return null;
     return new UserEntity(user.name, user.email, user.password, user.role);
