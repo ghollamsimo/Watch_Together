@@ -6,8 +6,19 @@ import { Model } from "mongoose";
 
 export class PlaylistRepositoryImpl implements PlaylistInterface{
     constructor(@InjectModel(PlaylistDocument.name) public readonly playListModel: Model<PlaylistDocument>){}
-    store(playlistEntity: PlaylistEntity): Promise<PlaylistEntity> {
+    async store(playlistEntity: PlaylistEntity): Promise<PlaylistEntity> {
+        const playlist = new this.playListModel({
+            user_id: playlistEntity.user_id,
+            name: playlistEntity.name,
+            videos: playlistEntity.videos,
+        });
         
+        const savedPlaylist = await playlist.save();
+        return new PlaylistEntity(
+            savedPlaylist.user_id.toString(),
+            savedPlaylist.name,
+            savedPlaylist.videos
+        )
     }
     index(playlistEntity: PlaylistEntity): Promise<PlaylistEntity> {
         throw new Error("Method not implemented.");
