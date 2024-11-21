@@ -1,3 +1,9 @@
-export class PlaylistEntity{
-    constructor(public readonly user_id: string, public readonly video_id: string, public readonly room_id: string){}
+import { Video } from "src/infrastructure/db/schemas/video.schema";
+
+export class PlaylistEntity {
+    constructor(
+        public readonly user_id: string,
+        public readonly name: string,
+        public readonly videos: Video[]
+    ) {}
 }
