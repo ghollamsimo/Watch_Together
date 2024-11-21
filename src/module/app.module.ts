@@ -6,6 +6,8 @@ import { UserUseCase } from '../application/usecases/user.usecase';
 import { UserRepositoryImpl } from '../infrastructure/repositories/user.repository.impl';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService, ConfigModule } from '@nestjs/config';
+import { PlaylistModule } from './playlist.module';
+import { JwtAuthGuard } from 'src/guards/auth.guard';
 
 @Module({
   imports: [
@@ -18,8 +20,9 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: '1h' },
-      })
+      }),
     }),
+    PlaylistModule,
   ],
   controllers: [UserController],
   providers: [
@@ -28,6 +31,9 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
       provide: 'UserInterface',
       useClass: UserRepositoryImpl,
     },
+    JwtAuthGuard
   ],
+  exports: [JwtAuthGuard],
+
 })
 export class AppModule {}
