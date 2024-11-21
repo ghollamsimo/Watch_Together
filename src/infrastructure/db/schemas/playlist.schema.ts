@@ -1,5 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Video, VideoSchema } from './video.schema';
 
 @Schema()
 export class Playlist extends Document {
@@ -14,4 +15,3 @@ export class Playlist extends Document {
 }
 
 export const PlaylistSchema = SchemaFactory.createForClass(Playlist);
-
