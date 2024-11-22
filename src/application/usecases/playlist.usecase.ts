@@ -10,7 +10,14 @@ export class PlaylistUseCase {
     ) {}
 
     async store(playlistDTO: PlaylistDTO) {
-        // Delegate the storage logic to the repository
         return this.playlistRepositoryImpl.store(playlistDTO);
+    }
+
+    delete(id: string, userId: string) {
+        return this.playlistRepositoryImpl.delete(id, userId);
+    }
+
+    index(){
+        return this.playlistRepositoryImpl.index()
     }
 }
