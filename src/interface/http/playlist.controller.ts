@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from "@nestjs/common";
 import { PlaylistUseCase } from "src/application/usecases/playlist.usecase";
 import { PlaylistDTO } from "src/core/dto/playlist.dto";
 import { JwtAuthGuard } from "src/guards/auth.guard";
@@ -14,5 +14,17 @@ export class PlaylistController {
         const user_id = req.user.id;
         const playlistDTO: PlaylistDTO = new PlaylistDTO(user_id, body.name, body.videos);
         return this.playlistUseCase.store(playlistDTO)
+    }
+
+    @Delete('destroy/:id')
+    @UseGuards(JwtAuthGuard) 
+    delete(@Req() req, @Param('id') id: string ){
+        const user_id = req.user.id;
+        return this.playlistUseCase.delete(id, user_id)
+    }
+
+    @Get('index')
+    index(){
+        return this.playlistUseCase.index()
     }
 }

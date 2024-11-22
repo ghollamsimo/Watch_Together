@@ -13,5 +13,6 @@ export class Playlist extends Document {
     @Prop({ type: [VideoSchema], default: [] })
     videos: Video[];
 }
+export type PlaylistDocument = Playlist & Document;
 
 export const PlaylistSchema = SchemaFactory.createForClass(Playlist);
